@@ -12,6 +12,7 @@ import { createCardInstance } from '../data/cards';
 import { loadGameSave, saveGameData } from './save-manager';
 import { generateActRooms } from '../engine/dungeon';
 import { createMonsterInstance } from '../data/monsters';
+import { Playroom } from '../playroom-sdk';
 
 export interface CombatState {
   monster: Monster;
@@ -38,12 +39,15 @@ export interface RunState {
   rooms: DungeonRoom[];
   currentRoomIdx: number;
   combat: CombatState | null;
+  playroomRunId?: string;
 }
 
 export class GameStore {
   public state: GameState = 'TITLE';
   public save: GameSaveData;
   public run: RunState | null = null;
+  public lastScore: number = 0;
+  private startRunPromise: Promise<{ runId: string } | null> | null = null;
   private listeners: (() => void)[] = [];
 
   constructor() {
@@ -93,6 +97,19 @@ export class GameStore {
 
     this.save.meta.stats.runsPlayed += 1;
     saveGameData(this.save);
+
+    // 非阻塞呼叫 Playroom.startRun() 取得局次 ID
+    this.startRunPromise = Playroom.startRun()
+      .then((res) => {
+        if (res?.runId && this.run) {
+          this.run.playroomRunId = res.runId;
+        }
+        return res;
+      })
+      .catch((err) => {
+        console.warn('Playroom startRun error (non-fatal):', err);
+        return null;
+      });
 
     this.setState('MAP');
   }
@@ -179,6 +196,8 @@ export class GameStore {
         this.run.soulsEarned += 100; // Big win bonus
         this.save.meta.soulShards += this.run.soulsEarned;
         saveGameData(this.save);
+        const finalScore = this.calculateCurrentScore(true);
+        this.reportScore(finalScore);
         this.setState('VICTORY');
       }
     } else {
@@ -190,6 +209,46 @@ export class GameStore {
       }
       this.setState('MAP');
     }
+  }
+
+  public calculateCurrentScore(isVictory: boolean = false): number {
+    if (!this.run) return 0;
+    const completedActs = Math.max(0, this.run.act - 1);
+    const completedRooms = this.run.currentRoomIdx;
+    let score =
+      this.run.soulsEarned * 10 +
+      this.run.gold * 2 +
+      completedActs * 300 +
+      completedRooms * 50;
+
+    if (isVictory) {
+      score += 500 + this.run.hp * 2;
+    }
+
+    return Math.max(0, Math.floor(score));
+  }
+
+  public reportScore(score: number): void {
+    this.lastScore = score;
+    const promise = this.startRunPromise;
+    if (!promise) return;
+
+    promise
+      .then((runInfo) => {
+        const runId = runInfo?.runId || this.run?.playroomRunId;
+        if (runId) {
+          return Playroom.finishRun({ runId, score });
+        }
+        return null;
+      })
+      .then((result) => {
+        if (result) {
+          console.log('Playroom leaderboard score reported successfully:', result);
+        }
+      })
+      .catch((err) => {
+        console.warn('Playroom finishRun error (non-fatal):', err);
+      });
   }
 
   public signPact(pactId: string): void {
@@ -223,6 +282,8 @@ export class GameStore {
     if (this.run) {
       this.save.meta.soulShards += this.run.soulsEarned;
       saveGameData(this.save);
+      const finalScore = this.calculateCurrentScore(false);
+      this.reportScore(finalScore);
     }
     this.setState('GAME_OVER');
   }

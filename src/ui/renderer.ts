@@ -578,7 +578,10 @@ export class UIRenderer {
       </p>
       <div style="background: var(--bg-card); border: 2px solid var(--border-gold); border-radius: 8px; padding: 16px; margin-bottom: 24px; width: 100%; max-width: 320px; font-size: 14px;">
         <div style="margin-bottom: 6px;">收集靈魂碎片: <b style="color: #4ea8de;">+${store.run?.soulsEarned || 0}</b></div>
-        <div>金幣儲備: <b style="color: #ffd166;">${store.run?.gold || 0}</b></div>
+        <div style="margin-bottom: 6px;">金幣儲備: <b style="color: #ffd166;">${store.run?.gold || 0}</b></div>
+        <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed #794336; font-size: 15px;">
+          最終結算得分: <b style="color: #a3e635; font-size: 18px;">${store.lastScore || 0} 分</b>
+        </div>
       </div>
       <button id="btn-victory-back" class="btn btn-block" style="max-width: 280px;">領取靈魂並返回標題</button>
     `;
@@ -605,7 +608,10 @@ export class UIRenderer {
         你的肉身在地牢中倒下，但殘留的靈魂碎片已被收納回靈魂殿堂。
       </p>
       <div style="background: var(--bg-card); border: 1px solid #794336; border-radius: 8px; padding: 14px; margin-bottom: 24px; width: 100%; max-width: 300px; font-size: 14px;">
-        <div>獲得靈魂碎片: <b style="color: #4ea8de;">+${store.run?.soulsEarned || 0}</b></div>
+        <div style="margin-bottom: 6px;">獲得靈魂碎片: <b style="color: #4ea8de;">+${store.run?.soulsEarned || 0}</b></div>
+        <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed #794336; font-size: 15px;">
+          最終結算得分: <b style="color: #ffd166; font-size: 18px;">${store.lastScore || 0} 分</b>
+        </div>
       </div>
       <button id="btn-defeat-back" class="btn btn-block" style="max-width: 280px;">重返生者世界</button>
     `;

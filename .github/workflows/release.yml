@@ -11,8 +11,8 @@ jobs:
   release:
     runs-on: ubuntu-latest
     env:
-      PLATFORM_DIR: ${{ runner.temp }}/playroom-platform-tools
-      GAME_ZIP: ${{ runner.temp }}/playroom-release/game.zip
+      PLATFORM_DIR: /tmp/playroom-platform-tools
+      GAME_ZIP: /tmp/playroom-release/game.zip
     defaults:
       run:
         shell: bash

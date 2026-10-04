@@ -19,5 +19,12 @@
   "devices": [
     "desktop",
     "mobile"
-  ]
+  ],
+  "leaderboard": {
+    "id": "classic",
+    "order": "desc",
+    "unit": "分",
+    "minScore": 0,
+    "maxScore": 9007199254740991
+  }
 }
