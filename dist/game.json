@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "mini-dungeon",
   "name": "微型地下城：骰子契約",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "一場在掌中展開的復古暗黑桌遊冒險。投擲命運的骰子，將點數嵌入技能卡牌，擊潰墓穴怪獸；在祭壇簽訂高風險的血腥契約，以生命換取狂暴力量。支援桌面滑鼠與手機直向觸控。",
   "author": "TommyLam",
   "entry": "index.html",
