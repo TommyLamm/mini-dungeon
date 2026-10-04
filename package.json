@@ -1,0 +1,16 @@
+{
+  "name": "mini-dungeon",
+  "version": "1.0.0",
+  "author": "TommyLam",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build && node scripts/copy-assets.js",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10"
+  }
+}
