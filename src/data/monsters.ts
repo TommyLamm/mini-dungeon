@@ -74,7 +74,7 @@ export const MONSTERS: Record<string, Monster> = {
     ]
   },
 
-  // 第二幕：熔岩裂隙
+  // 第二幕：熔岩裂隙與亡靈巫妖
   M_IMP: {
     id: 'M_IMP',
     name: '熔岩火鬼',
@@ -126,6 +126,27 @@ export const MONSTERS: Record<string, Monster> = {
       { type: 'DEBUFF', value: 3, name: '熔岩火海', description: '施加 3 層灼熱傷害' },
       { type: 'DEFEND', value: 20, name: '龍鱗壁壘', description: '獲得 20 點護甲' },
       { type: 'ATTACK', value: 26, name: '滅世龍息', description: '造成 26 點高溫傷害' }
+    ]
+  },
+  BOSS_LICH: {
+    id: 'BOSS_LICH',
+    name: '亡靈巫妖·克爾蘇加德',
+    act: 2,
+    maxHp: 110,
+    currentHp: 110,
+    block: 15,
+    poison: 0,
+    burn: 0,
+    isBoss: true,
+    avatar: '🧙‍♂️',
+    hasPhylactery: true,
+    isPhylacteryBroken: false,
+    currentIntentIdx: 0,
+    intents: [
+      { type: 'DEBUFF', value: 5, name: '冥府詛咒', description: '造成 5 點傷害，並施加詛咒骰' },
+      { type: 'DEFEND', value: 18, name: '靈魂護匣結界', description: '獲得 18 點護甲' },
+      { type: 'ATTACK', value: 18, name: '死靈霜箭', description: '造成 18 點穿透打擊' },
+      { type: 'ATTACK', value: 26, name: '終末凋零死光', description: '造成 26 點高額死靈傷害' }
     ]
   },
 
@@ -194,6 +215,9 @@ export function createMonsterInstance(id: string): Monster {
     block: t.block || 0,
     poison: 0,
     burn: 0,
+    hasPhylactery: t.hasPhylactery ?? false,
+    isPhylacteryBroken: false,
+    frozenReduction: 0,
     currentIntentIdx: 0
   };
 }

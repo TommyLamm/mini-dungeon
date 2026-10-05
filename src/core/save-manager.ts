@@ -8,7 +8,7 @@ export function getDefaultSave(): GameSaveData {
     timestamp: Date.now(),
     meta: {
       soulShards: 0,
-      unlockedHeroes: ['WARRIOR'] as HeroClass[],
+      unlockedHeroes: ['WARRIOR', 'ROGUE', 'MAGE'] as HeroClass[],
       unlockedPacts: ['P_GREED', 'P_GAMBLER', 'P_GLASS'],
       talents: {
         vitality: 0,
@@ -42,6 +42,16 @@ export function loadGameSave(): GameSaveData {
     if (!data.meta) data.meta = getDefaultSave().meta;
     if (!data.meta.talents) data.meta.talents = getDefaultSave().meta.talents;
     if (!data.meta.stats) data.meta.stats = getDefaultSave().meta.stats;
+    if (!data.meta.unlockedHeroes || data.meta.unlockedHeroes.length === 0) {
+      data.meta.unlockedHeroes = ['WARRIOR', 'ROGUE', 'MAGE'];
+    } else {
+      // 確保 3 大基礎職業在 v1.2.0 全部開放選擇
+      ['WARRIOR', 'ROGUE', 'MAGE'].forEach((heroId) => {
+        if (!data.meta.unlockedHeroes.includes(heroId)) {
+          data.meta.unlockedHeroes.push(heroId);
+        }
+      });
+    }
     return data;
   } catch (e) {
     console.error('[SaveManager] 讀取存檔失敗，初始化為預設值', e);

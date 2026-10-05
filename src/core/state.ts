@@ -23,6 +23,8 @@ export interface CombatState {
   freeFlipsUsed: number;
   turn: number;
   log: string[];
+  riposteActive?: boolean; // 鋼鐵守衛反擊姿態
+  isEnding?: boolean; // 防止結算競態衝突
 }
 
 export interface RunState {
@@ -39,6 +41,8 @@ export interface RunState {
   rooms: DungeonRoom[];
   currentRoomIdx: number;
   combat: CombatState | null;
+  permanentDieBonus: number;
+  bonusRerollsPerCombat: number;
   playroomRunId?: string;
 }
 
@@ -92,7 +96,9 @@ export class GameStore {
       act: 1,
       rooms,
       currentRoomIdx: 0,
-      combat: null
+      combat: null,
+      permanentDieBonus: 0,
+      bonusRerollsPerCombat: 0
     };
 
     this.save.meta.stats.runsPlayed += 1;
@@ -155,7 +161,9 @@ export class GameStore {
         freeRerollsUsed: 0,
         freeFlipsUsed: 0,
         turn: 1,
-        log: [`戰鬥開始！遭遇了【${monster.name}】！`]
+        log: [`戰鬥開始！遭遇了【${monster.name}】！`],
+        riposteActive: false,
+        isEnding: false
       };
 
       this.setState('COMBAT');
@@ -164,6 +172,33 @@ export class GameStore {
     } else if (room.type === 'CAMPFIRE') {
       this.setState('CAMPFIRE');
     }
+  }
+
+  public offerAltarOfFate(): void {
+    if (!this.run) return;
+    this.setState('ALTAR_OF_FATE');
+  }
+
+  public applyFateReroll(): void {
+    if (!this.run) return;
+    this.run.bonusRerollsPerCombat += 1;
+    this.proceedAfterFate();
+  }
+
+  public applyFateSplit(): void {
+    if (!this.run) return;
+    this.run.baseDiceCount = Math.min(6, this.run.baseDiceCount + 1);
+    this.proceedAfterFate();
+  }
+
+  public applyFateBlessing(): void {
+    if (!this.run) return;
+    this.run.permanentDieBonus += 1;
+    this.proceedAfterFate();
+  }
+
+  public proceedAfterFate(): void {
+    this.completeCurrentRoom();
   }
 
   public completeCurrentRoom(): void {

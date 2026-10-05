@@ -18,9 +18,10 @@ export interface Die {
   isUsed: boolean;
   isLocked: boolean;
   isRolling: boolean;
+  isCursed?: boolean; // 亡靈巫妖詛咒骰
 }
 
-export type SocketType = 'ANY' | 'MIN' | 'MAX' | 'EVEN' | 'ODD' | 'PAIR' | 'SUM';
+export type SocketType = 'ANY' | 'MIN' | 'MAX' | 'EVEN' | 'ODD' | 'PAIR' | 'SUM' | 'SUB_DIFF';
 
 export interface SocketRule {
   type: SocketType;
@@ -59,6 +60,9 @@ export interface Monster {
   isBoss?: boolean;
   isElite?: boolean;
   avatar: string;
+  hasPhylactery?: boolean; // 巫妖靈魂護命匣
+  isPhylacteryBroken?: boolean; // 護命匣是否已被擊破
+  frozenReduction?: number; // 冰封降低的意圖攻擊值
 }
 
 export interface Pact {
@@ -90,6 +94,7 @@ export type GameState =
   | 'MAP'
   | 'COMBAT'
   | 'ALTAR'
+  | 'ALTAR_OF_FATE'
   | 'CAMPFIRE'
   | 'VICTORY'
   | 'GAME_OVER';

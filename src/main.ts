@@ -2,10 +2,23 @@ import './ui/styles.css';
 import { store } from './core/state';
 import { UIRenderer } from './ui/renderer';
 import { sound } from './audio/sound-manager';
+import { DungeonAmbient } from './ui/ambient';
+import { Playroom } from './playroom-sdk';
 
 window.addEventListener('DOMContentLoaded', () => {
   const appContainer = document.getElementById('app');
   if (!appContainer) return;
+
+  // Initialize Dungeon Atmosphere Ambient Canvas
+  const ambientCanvas = document.getElementById('ambient-canvas') as HTMLCanvasElement;
+  if (ambientCanvas) {
+    new DungeonAmbient(ambientCanvas);
+  }
+
+  // Ready Playroom SDK
+  Playroom.ready().catch((err) => {
+    console.warn('Playroom ready check (non-fatal):', err);
+  });
 
   const renderer = new UIRenderer(appContainer);
   store.subscribe(() => {

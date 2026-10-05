@@ -130,11 +130,11 @@ export function generateActRooms(act: number): DungeonRoom[] {
         act: 2,
         floor: 6,
         type: 'BOSS',
-        title: '巨龍巢穴：熔火巨龍',
+        title: '死靈禁地：亡靈巫妖·克爾蘇加德',
         isCompleted: false,
         isCurrent: false,
         isAvailable: false,
-        monsterId: 'BOSS_DRAGON'
+        monsterId: 'BOSS_LICH'
       }
     ];
   }
